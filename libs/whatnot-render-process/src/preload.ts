@@ -12,5 +12,8 @@ function trySendMessage() {
     window.setTimeout(trySendMessage, 5000)
   }
 }
-// Just try to send the message and it will stop after 1 attempt.
-trySendMessage();
+
+export function appEntry() {
+  // Just try to send the message and it will stop after 1 attempt.
+  trySendMessage();
+}

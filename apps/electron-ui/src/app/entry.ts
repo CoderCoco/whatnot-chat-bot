@@ -1,12 +1,11 @@
-import { app, ipcMain } from "electron";
-import { whatnot } from "@app/whatnot-interface"
+import { app } from "electron";
+import { whatnot } from "@app/whatnot-interface";
+import { addLoggingHandler } from "./handle-logging";
 
 export async function main() {
   await app.whenReady();
 
-  ipcMain.handle('logger:sendMessage', (...args: any[]) => {
-    console.log(args);
-  });
+  addLoggingHandler();
 
   whatnot.open();
 }

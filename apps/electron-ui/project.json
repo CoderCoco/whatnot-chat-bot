@@ -40,6 +40,7 @@
       }
     },
     "serve": {
+      "dependsOn": ["build"],
       "executor": "nx:run-commands",
       "options": {
         "command": "npx electron dist/apps/electron-ui/main.js"
