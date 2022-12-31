@@ -1,0 +1,15 @@
+{
+  "name": "whatnot-chat-bot",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "devDependencies": {
+    "nx": "15.4.2",
+    "nx-electron": "^13.2.1",
+    "prettier": "^2.6.2"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
