@@ -1,7 +1,8 @@
 import { ChatBox } from "./whatnot-chat-box";
+import { logger } from '@app/logging';
 
 function trySendMessage() {
-  console.log("Attempting to send a chat message");
+  logger.verbose("Attempting to send a chat message");
 
   try {
     const chatbox = new ChatBox()

@@ -36,7 +36,7 @@ class WhatnotWebsite {
       title: "Dilla 8=====D",
       webPreferences: {
         devTools: true,
-        preload: path.join(__dirname, "../whatnot-render-process/main.js")
+        preload: path.join(__dirname, "../../libs/whatnot-render-process/src/main.js")
       }
     });
 

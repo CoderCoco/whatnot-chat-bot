@@ -15,7 +15,15 @@
         "outputPath": "dist/apps/electron-ui",
         "main": "apps/electron-ui/src/main.ts",
         "tsConfig": "apps/electron-ui/tsconfig.app.json",
-        "assets": ["apps/electron-ui/src/assets", "dist/apps/whatnot-render-process"]
+        "assets": [
+          "apps/electron-ui/src/assets", 
+          "tsconfig.base.json",
+          {
+            "input": "dist/libs/whatnot-render-process/src",
+            "glob": "**/*.js",
+            "output": "libs/whatnot-render-process/src"
+          }
+      ]
       },
       "configurations": {
         "production": {
@@ -32,7 +40,6 @@
       }
     },
     "serve": {
-      "dependsOn": ["build"],
       "executor": "nx:run-commands",
       "options": {
         "command": "npx electron dist/apps/electron-ui/main.js"
