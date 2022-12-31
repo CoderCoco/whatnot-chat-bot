@@ -1,21 +1,20 @@
 {
-  "name": "electron-ui",
+  "name": "whatnot-render-process",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "./",
+  "sourceRoot": "apps/whatnot-render-process/src",
   "projectType": "application",
-  "implicitDependencies": ["whatnot-render-process"],
   "targets": {
     "build": {
-      "dependsOn": ["^build"],
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/electron-ui",
-        "main": "apps/electron-ui/src/main.ts",
-        "tsConfig": "apps/electron-ui/tsconfig.app.json",
-        "assets": ["apps/electron-ui/src/assets", "dist/apps/whatnot-render-process"]
+        "outputPath": "dist/apps/whatnot-render-process",
+        "main": "apps/whatnot-render-process/src/main.ts",
+        "tsConfig": "apps/whatnot-render-process/tsconfig.app.json",
+        "assets": ["apps/whatnot-render-process/src/assets"],
+        "externalDependencies": "none"
       },
       "configurations": {
         "production": {
@@ -24,32 +23,36 @@
           "inspect": false,
           "fileReplacements": [
             {
-              "replace": "apps/electron-ui/src/environments/environment.ts",
-              "with": "apps/electron-ui/src/environments/environment.prod.ts"
+              "replace": "apps/whatnot-render-process/src/environments/environment.ts",
+              "with": "apps/whatnot-render-process/src/environments/environment.prod.ts"
             }
           ]
         }
       }
     },
     "serve": {
-      "dependsOn": ["build"],
-      "executor": "nx:run-commands",
+      "executor": "@nrwl/js:node",
       "options": {
-        "command": "npx electron dist/apps/electron-ui/main.js"
+        "buildTarget": "whatnot-render-process:build"
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "whatnot-render-process:build:production"
+        }
       }
     },
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/electron-ui/**/*.ts"]
+        "lintFilePatterns": ["apps/whatnot-render-process/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/electron-ui/jest.config.ts",
+        "jestConfig": "apps/whatnot-render-process/jest.config.ts",
         "passWithNoTests": true
       }
     }

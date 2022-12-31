@@ -1,5 +1,6 @@
 import { BrowserWindow } from "electron";
 import { logger } from "@app/logging";
+import path = require("path");
 
 /**
  * A class that integrates entirely with the whatnot website.
@@ -24,6 +25,8 @@ class WhatnotWebsite {
 
     logger.info("Opening a new WhatNot browser window.")
 
+    console.log(__dirname);
+
     this.#window = new BrowserWindow({
       width: WhatnotWebsite.MIN_WIDTH,
       height: WhatnotWebsite.MIN_HEIGHT,
@@ -32,7 +35,8 @@ class WhatnotWebsite {
       minimizable: false,
       title: "Dilla 8=====D",
       webPreferences: {
-        devTools: true
+        devTools: true,
+        preload: path.join(__dirname, "../whatnot-render-process/main.js")
       }
     });
 

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app } from "electron";
 import { whatnot } from "@app/whatnot-interface"
 
 export async function main() {
