@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import { logger } from "@app/logging";
 import path = require("path");
 
@@ -49,6 +49,29 @@ class WhatnotWebsite {
   private logOnReady() {
     this.debugLog()
     this.#window?.off('ready-to-show', this.logOnReady)
+  }
+
+  public async sendKey(entry: any, delay: number){
+    ["keyDown", "char", "keyUp"].forEach(async(type) =>{
+      entry.type = type;
+      this.window.webContents.sendInputEvent(entry);
+
+      // Delay
+      await new Promise(resolve => setTimeout(resolve, delay));
+    });
+}
+
+  public async sendSequence(sequence: any[], delay: number){
+    for (const entry of sequence){
+      logger.silly("Sending Key", entry);
+
+      await this.sendKey(entry, delay);
+      await new Promise(resolve => setTimeout(resolve, delay));
+    }
+  }
+
+  public get isOpen(): boolean {
+    return !!this.#window;
   }
 
   public close(): void {
