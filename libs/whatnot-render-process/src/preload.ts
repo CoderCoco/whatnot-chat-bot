@@ -1,5 +1,5 @@
-import { ChatBox } from "./whatnot/whatnot-chat-box";
 import { logger } from '@app/logging';
+import { ChatBox } from './whatnot';
 
 async function trySendMessage() {
   logger.verbose("Attempting to send a chat message");
