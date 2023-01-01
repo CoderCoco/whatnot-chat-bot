@@ -1,0 +1,17 @@
+{
+  "name": "bundle",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "implicitDependencies": ["electron-ui"],
+  "targets": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["{projectRoot}/out"],
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx electron-forge make"
+      }
+    }
+  },
+  "tags": []
+}

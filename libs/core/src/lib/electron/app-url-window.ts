@@ -31,7 +31,7 @@ export class AppUrlWindow {
 
   /**
    * Sends a single keypress to the application.
-   * @param entry The key to press
+   * @param keypress The key to press
    */
   public async sendKey(keypress: KeypressEvent){
     for (const type of AppUrlWindow.KEYPRESS_EVENT_ORDER) {
