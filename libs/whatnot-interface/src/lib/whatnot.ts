@@ -1,5 +1,6 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 import { logger } from "@app/logging";
+import { ChatBox, ChatBoxKeypressEvent } from "@app/whatnot-render-process";
 import path = require("path");
 import { AppUrlWindow } from "@app/core";
 
@@ -46,6 +47,9 @@ class WhatnotWebsite {
 
     await this.#appUrlWindow.whenReady()
 
+    logger.info('Adding chatbox keypress event listener');
+    ipcMain.handle(ChatBox.SEND_KEYS_EVENT, this.handleKeySequenceEvent.bind(this));
+
     this.debugLog();
   }
 
@@ -54,6 +58,7 @@ class WhatnotWebsite {
   }
 
   public close(): void {
+    ipcMain.off(ChatBox.SEND_KEYS_EVENT, this.handleKeySequenceEvent);
     this.appUrlWindow.window.close();
     this.#appUrlWindow = null;
   }
@@ -63,6 +68,14 @@ class WhatnotWebsite {
     const bounds = window?.getBounds();
 
     return `BrowserWindow(currentUrl = ${window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
+  }
+
+  private async handleKeySequenceEvent(_: Electron.IpcMainInvokeEvent, {keys}: ChatBoxKeypressEvent) {
+    if(logger.isVerboseEnabled()) {
+      logger.verbose(`Sending requested key sequence, ${JSON.stringify(keys)}`);
+    }
+
+    await this.appUrlWindow.sendSequence(keys);
   }
 
   private debugLog() {

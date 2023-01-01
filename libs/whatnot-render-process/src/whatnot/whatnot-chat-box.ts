@@ -1,5 +1,7 @@
 import { logger } from "@app/logging";
 import { ipcRenderer } from "electron";
+import { tick } from "@app/core";
+import { ChatBoxKeypressEvent } from "./chatbox-keypress..event";
 import { convertString } from "./convert-string";
 
 export class ChatBox {
@@ -21,20 +23,26 @@ export class ChatBox {
     this.#chatDomElement.focus();
 
     logger.debug("Waiting for focus");
-    await new Promise(resolve => setTimeout(resolve, 0)); // TODO: Uggg make sleep function
+    await tick();
 
     logger.debug(`Sending \"${message}\"`);
-    await ipcRenderer.invoke(ChatBox.SEND_KEYS_EVENT, { keys: [...convertString(message), {keyCode: "Return"}] });
+    await ipcRenderer.invoke(ChatBox.SEND_KEYS_EVENT, this.getKeystrokes(message));
   }
 
-  private sendEnter() {
-    this.#chatDomElement
-      .dispatchEvent(
-        new KeyboardEvent("keydown", {
-          bubbles: true,
-          cancelable: true,
-          keyCode: 13
-        })
-      )
+  private getKeystrokes(message: string): ChatBoxKeypressEvent {
+    return {
+      keys: [...convertString(message), {keyCode: "Return"}]
+    }
   }
+
+  // private sendEnter() {
+  //   this.#chatDomElement
+  //     .dispatchEvent(
+  //       new KeyboardEvent("keydown", {
+  //         bubbles: true,
+  //         cancelable: true,
+  //         keyCode: 13
+  //       })
+  //     )
+  // }
 }

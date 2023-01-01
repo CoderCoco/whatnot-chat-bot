@@ -1,3 +1,3 @@
 import { appEntry } from "../preload";
 
-appEntry()
+appEntry();
