@@ -1,1 +1,1 @@
-export * from './lib/application-events';
+export * from './lib';
