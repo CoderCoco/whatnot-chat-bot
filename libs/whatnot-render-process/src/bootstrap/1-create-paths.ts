@@ -1,5 +1,10 @@
+const path = require("path");
+
+const loadPath: string = path.join(__dirname, "../../../../tsconfig.base.json");
+console.log("loading from", loadPath);
+
 const tsConfigPaths = require("tsconfig-paths");
-const tsConfigJson = require("../../../../../tsconfig.base.json")
+const tsConfigJson = require(loadPath)
 
 type PathsObject = {[key: string]: string[]}
 

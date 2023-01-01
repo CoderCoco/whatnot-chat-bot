@@ -41,7 +41,7 @@ class WhatnotWebsite {
       webPreferences: {
         devTools: true,
         sandbox: false,
-        preload: path.join(__dirname, "../../libs/whatnot-render-process/src/main.js")
+        preload: path.join(__dirname, "../../apps/electron-ui/libs/whatnot-render-process/src/main.js")
       }
     });
 
