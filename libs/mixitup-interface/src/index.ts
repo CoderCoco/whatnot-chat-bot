@@ -1,1 +1,1 @@
-export * from './lib/mixitup-interface';
+export * from './lib';

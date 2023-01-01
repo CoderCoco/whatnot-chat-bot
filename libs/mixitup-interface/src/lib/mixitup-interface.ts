@@ -1,3 +1,7 @@
-export function mixitupInterface(): string {
-  return 'mixitup-interface';
+import {Commands} from "./commands";
+
+class MixitupInterface {
+  public readonly commands = new Commands();
 }
+
+export const mixitup = new MixitupInterface();
