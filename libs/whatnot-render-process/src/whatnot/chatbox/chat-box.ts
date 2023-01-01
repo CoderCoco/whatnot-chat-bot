@@ -1,12 +1,12 @@
 import {
   WHATNOT_CHAT_SEND_EVENT,
-  WHATNOT_CHAT_SEND_KEYS_EVENT, WhatnotChatSendEventArg
+  WHATNOT_CHAT_SEND_KEYS_EVENT, WhatnotChatSendEventArg,
+  WhatnotChatSendKeyEventArg
 } from "@app/application-events";
 import { logger } from "@app/logging";
 import { ipcRenderer } from "electron";
 import {OnDestroy, tick} from "@app/core";
 import {IpcRenderEventListener} from "@app/core";
-import { ChatBoxKeypressEvent } from "./chat-box-keypress.event";
 import { convertString } from "../convert-string";
 import { ChatBoxWatcher } from "./chat-box-watcher";
 
@@ -64,7 +64,7 @@ export class ChatBox implements OnDestroy {
     await ipcRenderer.invoke(WHATNOT_CHAT_SEND_KEYS_EVENT, this.getKeystrokes(message));
   }
 
-  private getKeystrokes(message: string): ChatBoxKeypressEvent {
+  private getKeystrokes(message: string): WhatnotChatSendKeyEventArg {
     return {
       keys: [...convertString(message), {keyCode: "Return"}]
     }

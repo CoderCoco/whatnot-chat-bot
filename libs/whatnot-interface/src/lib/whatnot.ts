@@ -1,9 +1,6 @@
-import {WHATNOT_CHAT_SEND_KEYS_EVENT, WhatnotWebsiteStatus} from "@app/application-events";
+import {WHATNOT_CHAT_SEND_KEYS_EVENT, WhatnotChatSendKeyEventArg, WhatnotWebsiteStatus} from "@app/application-events";
 import {AppUrlWindow} from "@app/core";
 import {logger} from "@app/logging";
-
-// TODO: Remove this dependency
-import {ChatBoxKeypressEvent} from "@app/whatnot-render-process";
 import {BrowserWindow, ipcMain} from "electron";
 import {SiteStatus} from "./site-status";
 import path = require("path");
@@ -79,7 +76,7 @@ class WhatnotWebsite {
     return `BrowserWindow(currentUrl = ${window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
   }
 
-  private async handleKeySequenceEvent(_: Electron.IpcMainInvokeEvent, {keys}: ChatBoxKeypressEvent) {
+  private async handleKeySequenceEvent(_: Electron.IpcMainInvokeEvent, {keys}: WhatnotChatSendKeyEventArg) {
     if(logger.isVerboseEnabled()) {
       logger.verbose(`Sending requested key sequence, ${JSON.stringify(keys)}`);
     }

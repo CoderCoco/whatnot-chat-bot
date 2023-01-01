@@ -1,10 +1,10 @@
+import {KeypressEvent} from "@app/core";
+
 /**
  * An event that will be fired by the whatnot render process that indicates
  * a chat message was received.
  */
 export const WHATNOT_CHAT_RECEIVE_EVENT = "whatnot:chat:receive"
-// TODO: Add expected type for this method
-
 
 /**
  * An event that the whatnot render process listens to in order to send a chat
@@ -22,6 +22,9 @@ export type WhatnotChatSendEventArg = {message: string}
  * which keys should be pressed.
  */
 export const WHATNOT_CHAT_SEND_KEYS_EVENT = "whatnot:chat:send-keys"
+export interface WhatnotChatSendKeyEventArg {
+  keys: KeypressEvent[]
+}
 
 /**
  * An event that is fired when the website status changes.
