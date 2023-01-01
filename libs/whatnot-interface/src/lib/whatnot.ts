@@ -52,9 +52,14 @@ class WhatnotWebsite {
   }
 
   public async sendKey(entry: any, delay: number){
+    const window = this.window;
+
     ["keyDown", "char", "keyUp"].forEach(async(type) =>{
+      if (type == "char" && entry.keyCode.length > 1) return;
+
       entry.type = type;
-      this.window.webContents.sendInputEvent(entry);
+      window.focus();
+      window.webContents.sendInputEvent(entry);
 
       // Delay
       await new Promise(resolve => setTimeout(resolve, delay));

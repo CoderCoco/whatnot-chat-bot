@@ -1,5 +1,6 @@
 import { logger } from "@app/logging";
 import { ipcRenderer } from "electron";
+import { convertString } from "./convert-string";
 
 export class ChatBox {
   public static readonly SEND_KEYS_EVENT = "app:send-keys"
@@ -20,18 +21,10 @@ export class ChatBox {
     this.#chatDomElement.focus();
 
     logger.debug("Waiting for focus");
-    await new Promise(resolve => setTimeout(resolve, 10));// Uggg make sleep function
+    await new Promise(resolve => setTimeout(resolve, 0)); // TODO: Uggg make sleep function
 
-    logger.debug("Sending \"hello\"");
-    await ipcRenderer.invoke(ChatBox.SEND_KEYS_EVENT, {keys: [{keyCode: "h"}, {keyCode: "e"}, {keyCode: "l"}, {keyCode: "l"}, {keyCode: "o"}]})
-
-    // Try to just send the enter keycode if that works then I don't have to worry about sending the dumb event lol
-    // wait for the next time dilla is live
-
-    // this.#chatDomElement.value = message;
-
-    logger.debug("Sending enter");
-    this.sendEnter();
+    logger.debug(`Sending \"${message}\"`);
+    await ipcRenderer.invoke(ChatBox.SEND_KEYS_EVENT, { keys: [...convertString(message), {keyCode: "Return"}] });
   }
 
   private sendEnter() {

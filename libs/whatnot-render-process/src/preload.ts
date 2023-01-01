@@ -7,7 +7,9 @@ async function trySendMessage() {
   try {
     const chatbox = new ChatBox()
 
-    await chatbox.sendChatMessage("Hello dilla, I sent this from the app");
+    await chatbox.sendChatMessage("Hello Dilla, I sent this from the app");
+    await chatbox.sendChatMessage("I figured out that I don't actually have to wait for you to go live.");
+    await chatbox.sendChatMessage("It sends messages while you aren't live too lmao xD");
   } catch (e) {
     window.setTimeout(trySendMessage, 5000)
   }
