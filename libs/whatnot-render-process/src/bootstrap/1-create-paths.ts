@@ -1,6 +1,8 @@
 const path = require("path");
 
-const loadPath: string = path.join(__dirname, "../../../../tsconfig.base.json");
+const rootPath: string = path.join(__dirname, "../../../../..");
+const loadPath: string = path.join(rootPath, "tsconfig.base.json");
+
 console.log("loading from", loadPath);
 
 const tsConfigPaths = require("tsconfig-paths");
@@ -18,7 +20,9 @@ for (const [key, value] of Object.entries<string[]>(tsConfigPathVariable)) {
   })
 }
 
+console.log(evaluatedPaths);
+
 tsConfigPaths.register({
-  baseUrl: "./",
+  baseUrl: rootPath,
   paths: evaluatedPaths
 });

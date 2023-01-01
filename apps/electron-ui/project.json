@@ -16,14 +16,8 @@
         "main": "apps/electron-ui/src/main.ts",
         "tsConfig": "apps/electron-ui/tsconfig.app.json",
         "assets": [
-          "apps/electron-ui/src/assets", 
-          "tsconfig.base.json",
-          {
-            "input": "dist/libs/whatnot-render-process/src",
-            "glob": "**/*.js",
-            "output": "libs/whatnot-render-process/src"
-          }
-      ]
+          "apps/electron-ui/src/assets"
+        ]
       },
       "configurations": {
         "production": {
