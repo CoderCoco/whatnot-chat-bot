@@ -29,7 +29,7 @@ export class SiteView {
 
       this.destroyOldView();
 
-      await ipcRenderer.send(WHATNOT_WEBSITE_STATUS_UPDATE_EVENT, {status: WhatnotWebsiteStatus.UNKNOWN})
+      await ipcRenderer.invoke(WHATNOT_WEBSITE_STATUS_UPDATE_EVENT, {status: WhatnotWebsiteStatus.UNKNOWN})
     }
   }
 
@@ -44,7 +44,7 @@ export class SiteView {
 
     this.#currentSiteView = newSite;
 
-    await ipcRenderer.send(WHATNOT_WEBSITE_STATUS_UPDATE_EVENT, {status: WhatnotWebsiteStatus.LIVE_STREAM})
+    await ipcRenderer.invoke(WHATNOT_WEBSITE_STATUS_UPDATE_EVENT, {status: WhatnotWebsiteStatus.LIVE_STREAM})
   }
 
   private destroyOldView() {

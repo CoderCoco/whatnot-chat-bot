@@ -1,5 +1,10 @@
-import {WHATNOT_CHAT_SEND_KEYS_EVENT, WhatnotChatSendKeyEventArg, WhatnotWebsiteStatus} from "@app/application-events";
-import {AppUrlWindow} from "@app/core";
+import {
+  WHATNOT_CHAT_RECEIVE_EVENT,
+  WHATNOT_CHAT_SEND_KEYS_EVENT, WhatnotChatReceiveEventArg,
+  WhatnotChatSendKeyEventArg,
+  WhatnotWebsiteStatus
+} from "@app/application-events";
+import {AppUrlWindow, IpcMainEventListener} from "@app/core";
 import {logger} from "@app/logging";
 import {BrowserWindow, ipcMain} from "electron";
 import {SiteStatus} from "./site-status";
@@ -15,6 +20,9 @@ class WhatnotWebsite {
   private static readonly MIN_WIDTH = 1220;
   private static readonly MIN_HEIGHT = 725;
   public readonly siteStatus = new SiteStatus();
+
+  #sendKeysEventHandle: IpcMainEventListener | null = null;
+  #receiveMessageEventHandle: IpcMainEventListener | null = null;
 
   #appUrlWindow: AppUrlWindow | null = null
 
@@ -50,7 +58,9 @@ class WhatnotWebsite {
     await this.#appUrlWindow.whenReady()
 
     logger.info('Adding chatbox keypress event listener');
-    ipcMain.handle(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent.bind(this));
+
+    this.#sendKeysEventHandle = new IpcMainEventListener(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent.bind(this))
+    this.#receiveMessageEventHandle = new IpcMainEventListener(WHATNOT_CHAT_RECEIVE_EVENT, this.handleReceivedMessageEvent.bind(this))
 
     this.debugLog();
   }
@@ -67,6 +77,11 @@ class WhatnotWebsite {
     ipcMain.off(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent);
     this.appUrlWindow.window.close();
     this.#appUrlWindow = null;
+    this.#sendKeysEventHandle?.destroy()
+    this.#receiveMessageEventHandle?.destroy()
+
+    this.#sendKeysEventHandle = null;
+    this.#receiveMessageEventHandle = null;
   }
 
   public toString(): string {
@@ -82,6 +97,10 @@ class WhatnotWebsite {
     }
 
     await this.appUrlWindow.sendSequence(keys);
+  }
+
+  private handleReceivedMessageEvent(_: Electron.IpcMainInvokeEvent, chatMessage: WhatnotChatReceiveEventArg) {
+    logger.silly("Received chat message over the pipe", { data: chatMessage });
   }
 
   private debugLog() {

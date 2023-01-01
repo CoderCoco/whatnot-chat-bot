@@ -15,11 +15,11 @@ export class IpcMainEventListener {
    */
   constructor(
     public readonly event: string,
-    private readonly listener: (event: Electron.IpcMainEvent, ...args: any) => void
+    private readonly listener: (event: Electron.IpcMainInvokeEvent, ...args: any) => void
   ) {
     logger.silly(`Adding IpcMainEventListener for ${event}`)
 
-    ipcMain.on(this.event, this.listener);
+    ipcMain.handle(this.event, this.listener);
   }
 
   /**

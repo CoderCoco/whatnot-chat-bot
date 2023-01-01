@@ -1,7 +1,9 @@
+import {WhatnotChatReceiveEventArg} from "@app/application-events";
+
 /**
  * A class that represents the value of a single chat message.
  */
-export class ChatBoxMessage {
+export class ChatBoxMessage implements WhatnotChatReceiveEventArg {
   /**
    * The user that sent the chat message.
    */

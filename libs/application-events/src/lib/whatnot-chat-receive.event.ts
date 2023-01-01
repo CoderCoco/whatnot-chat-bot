@@ -8,5 +8,6 @@ export const WHATNOT_CHAT_RECEIVE_EVENT = "whatnot:chat:receive"
  * The event arguments that will be sent by {@link WHATNOT_CHAT_RECEIVE_EVENT}
  */
 export interface WhatnotChatReceiveEventArg {
-  message: string
+  message: string;
+  user: string;
 }
