@@ -1,8 +1,9 @@
+import {OnDestroy} from "@app/core";
 import { logger } from "@app/logging";
 import { Subject, Observable } from "rxjs";
 
 // TODO: Document
-export class DomWatcher {
+export class DomWatcher implements OnDestroy {
   private allMutationSubject: Subject<MutationRecord> = new Subject<MutationRecord>();
   private nodeAddedSubject: Subject<Node> = new Subject<Node>();
   private nodeRemovedSubject: Subject<Node> = new Subject<Node>();
@@ -22,13 +23,23 @@ export class DomWatcher {
   private readonly mutationObserver: MutationObserver;
 
   constructor(watchElement: HTMLElement, doesMonitorChildren = true) {
-    if( !watchElement || watchElement.nodeType !== 1 ) throw new Error("BOOM"); 
+    logger.debug(`Constructing a new DomWatcher object on ${watchElement?.outerHTML}`)
+
+    if( !watchElement || watchElement.nodeType !== 1 ) throw new Error("Unable to watch element!");
 
     // define a new observer
     this.mutationObserver = new MutationObserver(this.observerCallback.bind(this));
 
     // have the observer observe for changes in children
     this.mutationObserver.observe( watchElement, { childList: true, subtree: doesMonitorChildren })
+  }
+
+  public destroy() {
+    logger.debug("Destroying a dom watcher");
+    this.mutationObserver.disconnect();
+    this.allMutationSubject.complete();
+    this.nodeAddedSubject.complete();
+    this.nodeRemovedSubject.complete();
   }
 
   private observerCallback(mutations: MutationRecord[]) {

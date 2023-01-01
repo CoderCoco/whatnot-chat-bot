@@ -1,8 +1,12 @@
+import {WHATNOT_CHAT_SEND_KEYS_EVENT} from "@app/application-events";
 import { BrowserWindow, ipcMain } from "electron";
 import { logger } from "@app/logging";
-import { ChatBox, ChatBoxKeypressEvent } from "@app/whatnot-render-process";
+
+// TODO: Remove this dependency
+import { ChatBoxKeypressEvent } from "@app/whatnot-render-process";
 import path = require("path");
 import { AppUrlWindow } from "@app/core";
+import {SiteStatus} from "./site-status";
 
 /**
  * A class that integrates entirely with the whatnot website.
@@ -13,6 +17,7 @@ class WhatnotWebsite {
   // These numbers were calculated by determining the shift in the whatnot css
   private static readonly MIN_WIDTH = 1220;
   private static readonly MIN_HEIGHT = 725;
+  public readonly siteStatus = new SiteStatus();
 
   #appUrlWindow: AppUrlWindow | null = null
 
@@ -48,7 +53,7 @@ class WhatnotWebsite {
     await this.#appUrlWindow.whenReady()
 
     logger.info('Adding chatbox keypress event listener');
-    ipcMain.handle(ChatBox.SEND_KEYS_EVENT, this.handleKeySequenceEvent.bind(this));
+    ipcMain.handle(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent.bind(this));
 
     this.debugLog();
   }
@@ -57,13 +62,17 @@ class WhatnotWebsite {
     return !!this.#appUrlWindow;
   }
 
+  public get isLivestreamReady(): boolean {
+    return false;
+  }
+
   public close(): void {
-    ipcMain.off(ChatBox.SEND_KEYS_EVENT, this.handleKeySequenceEvent);
+    ipcMain.off(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent);
     this.appUrlWindow.window.close();
     this.#appUrlWindow = null;
   }
 
-  public toString(): String {
+  public toString(): string {
     const window = this.#appUrlWindow?.window
     const bounds = window?.getBounds();
 

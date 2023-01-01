@@ -1,17 +1,23 @@
+import {OnDestroy} from "@app/core";
 import { logger } from "@app/logging";
+import {Subscription} from "rxjs";
 import { DomWatcher } from "../dom-watcher"
 import { ChatBoxMessage } from "./chat-box-message";
 
-export class ChatBoxWatcher {
+export class ChatBoxWatcher implements OnDestroy {
   readonly #watcher: DomWatcher;
+
+  readonly #nodeAdded$: Subscription
 
   constructor(chatboxDiv: HTMLDivElement) {
     this.#watcher = new DomWatcher(chatboxDiv);
-    this.addWatcherMethods();
+    this.#nodeAdded$ = this.#watcher.nodeAdded.subscribe(this.handleAddNode.bind(this))
   }
 
-  private addWatcherMethods() {
-    this.#watcher.nodeAdded.subscribe(this.handleAddNode.bind(this))
+  public destroy() {
+    logger.silly("Destroying the chatbox watcher");
+    this.#nodeAdded$.unsubscribe()
+    this.#watcher.destroy();
   }
 
   private handleAddNode(value: Node) {
