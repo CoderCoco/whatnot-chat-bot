@@ -1,6 +1,7 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow } from "electron";
 import { logger } from "@app/logging";
 import path = require("path");
+import { AppUrlWindow } from "@app/core";
 
 /**
  * A class that integrates entirely with the whatnot website.
@@ -12,22 +13,24 @@ class WhatnotWebsite {
   private static readonly MIN_WIDTH = 1220;
   private static readonly MIN_HEIGHT = 725;
 
-  #window: BrowserWindow | null = null
+  #appUrlWindow: AppUrlWindow | null = null
 
-  public get window(): BrowserWindow {
-    if (!this.#window) throw new Error("Whatnot window is not opened");
+  public get appUrlWindow(): AppUrlWindow {
+    if (!this.#appUrlWindow) throw new Error("Whatnot window is not opened");
 
-    return this.#window;
+    return this.#appUrlWindow;
   }
 
-  public open(): void {
-    if (this.#window) throw new Error("Whatnot window is already opened");
+  public get window(): BrowserWindow {
+    return this.appUrlWindow.window;
+  }
+
+  public async open(): Promise<void> {
+    if (this.#appUrlWindow) throw new Error("Whatnot window is already opened");
 
     logger.info("Opening a new WhatNot browser window.")
 
-    console.log(__dirname);
-
-    this.#window = new BrowserWindow({
+    this.#appUrlWindow = new AppUrlWindow(WhatnotWebsite.BASE_URL, {
       width: WhatnotWebsite.MIN_WIDTH,
       height: WhatnotWebsite.MIN_HEIGHT,
       minHeight: WhatnotWebsite.MIN_HEIGHT + 20,
@@ -41,53 +44,25 @@ class WhatnotWebsite {
       }
     });
 
-    this.#window.loadURL(WhatnotWebsite.BASE_URL);
+    await this.#appUrlWindow.whenReady()
 
-    this.#window.on('ready-to-show', this.logOnReady.bind(this));
-  }
-
-  private logOnReady() {
-    this.debugLog()
-    this.#window?.off('ready-to-show', this.logOnReady)
-  }
-
-  public async sendKey(entry: any, delay: number){
-    const window = this.window;
-
-    ["keyDown", "char", "keyUp"].forEach(async(type) =>{
-      if (type == "char" && entry.keyCode.length > 1) return;
-
-      entry.type = type;
-      window.focus();
-      window.webContents.sendInputEvent(entry);
-
-      // Delay
-      await new Promise(resolve => setTimeout(resolve, delay));
-    });
-}
-
-  public async sendSequence(sequence: any[], delay: number){
-    for (const entry of sequence){
-      logger.silly("Sending Key", entry);
-
-      await this.sendKey(entry, delay);
-      await new Promise(resolve => setTimeout(resolve, delay));
-    }
+    this.debugLog();
   }
 
   public get isOpen(): boolean {
-    return !!this.#window;
+    return !!this.#appUrlWindow;
   }
 
   public close(): void {
-    this.window.close();
-    this.#window = null;
+    this.appUrlWindow.window.close();
+    this.#appUrlWindow = null;
   }
 
   public toString(): String {
-    const bounds = this.#window?.getBounds();
+    const window = this.#appUrlWindow?.window
+    const bounds = window?.getBounds();
 
-    return `BrowserWindow(currentUrl = ${this.#window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
+    return `BrowserWindow(currentUrl = ${window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
   }
 
   private debugLog() {

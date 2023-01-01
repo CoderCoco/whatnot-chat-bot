@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@app/core": ["libs/core/src/index.ts"],
       "@app/logging": ["libs/logging/src/index.ts"],
       "@app/whatnot-interface": ["libs/whatnot-interface/src/index.ts"],
       "@app/whatnot-render-process": [
