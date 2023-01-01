@@ -1,7 +1,7 @@
 import {OnDestroy} from "@app/core";
 import { logger } from "@app/logging";
 import {Subscription} from "rxjs";
-import { DomWatcher } from "../dom-watcher"
+import { DomWatcher } from "../../dom-watcher"
 import { ChatBoxMessage } from "./chat-box-message";
 
 export class ChatBoxWatcher implements OnDestroy {

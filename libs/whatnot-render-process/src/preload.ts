@@ -1,5 +1,5 @@
 import {logger} from "@app/logging";
-import {SiteView} from "./whatnot/site-view";
+import {SiteView} from "./whatnot/site-view/site-view";
 // import {SiteWatcher} from "./whatnot/site-watcher";
 // async function trySendMessage() {
 //   logger.verbose("Attempting to send a chat message");

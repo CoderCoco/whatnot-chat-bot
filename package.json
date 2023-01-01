@@ -6,8 +6,7 @@
   "description": "A WhatNot chatbot",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make"
+    "package": "electron-forge package"
   },
   "main": "dist/apps/electron-ui/main.js",
   "private": true,

@@ -1,6 +1,6 @@
 import { logger } from "@app/logging";
 import {Observable, ReplaySubject, Subject} from "rxjs";
-import {DomWatcher} from "./dom-watcher";
+import {DomWatcher} from "../dom-watcher";
 
 export class SiteWatcher {
   #watchedElement = document.querySelector("title") as HTMLTitleElement;

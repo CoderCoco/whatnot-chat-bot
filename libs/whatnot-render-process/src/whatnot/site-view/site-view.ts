@@ -5,7 +5,7 @@ import {
 import {OnDestroy, sleep} from "@app/core";
 import {logger} from "@app/logging";
 import {ipcRenderer} from "electron";
-import {LiveStream} from "./live-stream";
+import {LiveStream} from "../livestream/live-stream";
 import {SiteWatcher} from "./site-watcher";
 
 export class SiteView {

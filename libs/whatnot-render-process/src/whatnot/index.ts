@@ -1,1 +1,1 @@
-export * from './chatbox';
+export * from './livestream/chatbox';
