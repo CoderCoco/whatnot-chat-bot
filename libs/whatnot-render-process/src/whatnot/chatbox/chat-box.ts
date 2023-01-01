@@ -5,7 +5,7 @@ import {
 import { logger } from "@app/logging";
 import { ipcRenderer } from "electron";
 import {OnDestroy, tick} from "@app/core";
-import {IpcRenderEventListener} from "../../ipc-render-event-listener";
+import {IpcRenderEventListener} from "@app/core";
 import { ChatBoxKeypressEvent } from "./chat-box-keypress.event";
 import { convertString } from "../convert-string";
 import { ChatBoxWatcher } from "./chat-box-watcher";
@@ -27,6 +27,7 @@ export class ChatBox implements OnDestroy {
   }
 
   constructor() {
+    logger.debug("Constructing a new ChatBox");
     const input = document.querySelector(".chatInput");
 
     if (input == null) {
@@ -52,7 +53,7 @@ export class ChatBox implements OnDestroy {
     await this.sendChatMessage(message)
   }
 
-  private async sendChatMessage(message: string) {
+  public async sendChatMessage(message: string) {
     logger.debug("Focusing the chat element");
     this.#sendMessageElement.focus();
 

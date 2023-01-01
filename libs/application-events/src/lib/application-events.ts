@@ -29,6 +29,14 @@ export const WHATNOT_CHAT_SEND_KEYS_EVENT = "whatnot:chat:send-keys"
 export const WHATNOT_WEBSITE_STATUS_UPDATE_EVENT = "whatnot:main:status"
 
 /**
+ * An enum that describes the current view status of the whatnot website
+ */
+export enum WhatnotWebsiteStatus {
+  LIVE_STREAM,
+  UNKNOWN
+}
+
+/**
  * The type of data expected to be passed on the {@link WHATNOT_WEBSITE_STATUS_UPDATE_EVENT}
  */
-export type WhatnotWebsiteStatusUpdateArg = { data: any }
+export type WhatnotWebsiteStatusUpdateArg = { status: WhatnotWebsiteStatus }

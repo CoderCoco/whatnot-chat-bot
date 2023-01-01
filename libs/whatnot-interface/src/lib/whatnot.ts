@@ -1,12 +1,12 @@
-import {WHATNOT_CHAT_SEND_KEYS_EVENT} from "@app/application-events";
-import { BrowserWindow, ipcMain } from "electron";
-import { logger } from "@app/logging";
+import {WHATNOT_CHAT_SEND_KEYS_EVENT, WhatnotWebsiteStatus} from "@app/application-events";
+import {AppUrlWindow} from "@app/core";
+import {logger} from "@app/logging";
 
 // TODO: Remove this dependency
-import { ChatBoxKeypressEvent } from "@app/whatnot-render-process";
-import path = require("path");
-import { AppUrlWindow } from "@app/core";
+import {ChatBoxKeypressEvent} from "@app/whatnot-render-process";
+import {BrowserWindow, ipcMain} from "electron";
 import {SiteStatus} from "./site-status";
+import path = require("path");
 
 /**
  * A class that integrates entirely with the whatnot website.
@@ -63,7 +63,7 @@ class WhatnotWebsite {
   }
 
   public get isLivestreamReady(): boolean {
-    return false;
+    return this.siteStatus.status == WhatnotWebsiteStatus.LIVE_STREAM;
   }
 
   public close(): void {

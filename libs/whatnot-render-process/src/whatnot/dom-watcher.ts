@@ -23,7 +23,7 @@ export class DomWatcher implements OnDestroy {
   private readonly mutationObserver: MutationObserver;
 
   constructor(watchElement: HTMLElement, doesMonitorChildren = true) {
-    logger.debug(`Constructing a new DomWatcher object on ${watchElement?.outerHTML}`)
+    logger.debug(`Constructing a new DomWatcher object on ${watchElement?.tagName}`)
 
     if( !watchElement || watchElement.nodeType !== 1 ) throw new Error("Unable to watch element!");
 

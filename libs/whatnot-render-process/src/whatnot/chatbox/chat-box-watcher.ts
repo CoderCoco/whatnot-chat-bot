@@ -10,6 +10,7 @@ export class ChatBoxWatcher implements OnDestroy {
   readonly #nodeAdded$: Subscription
 
   constructor(chatboxDiv: HTMLDivElement) {
+    logger.debug("Constructing a new ChatBoxWatcher");
     this.#watcher = new DomWatcher(chatboxDiv);
     this.#nodeAdded$ = this.#watcher.nodeAdded.subscribe(this.handleAddNode.bind(this))
   }
