@@ -6,6 +6,7 @@ import {
 } from "@app/application-events";
 import {AppUrlWindow, IpcMainEventListener} from "@app/core";
 import {logger} from "@app/logging";
+import {mixitup} from "@app/mixitup-interface";
 import {BrowserWindow, ipcMain} from "electron";
 import {SiteStatus} from "./site-status";
 import path = require("path");
@@ -99,8 +100,10 @@ class WhatnotWebsite {
     await this.appUrlWindow.sendSequence(keys);
   }
 
-  private handleReceivedMessageEvent(_: Electron.IpcMainInvokeEvent, chatMessage: WhatnotChatReceiveEventArg) {
+  private async handleReceivedMessageEvent(_: Electron.IpcMainInvokeEvent, chatMessage: WhatnotChatReceiveEventArg) {
     logger.silly("Received chat message over the pipe", { data: chatMessage });
+
+    await mixitup.commands.processChatMessage(chatMessage.message)
   }
 
   private debugLog() {
