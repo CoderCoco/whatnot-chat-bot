@@ -5,6 +5,7 @@ async function trySendMessage() {
   logger.verbose("Attempting to send a chat message");
 
   try {
+    // TODO: Add listener to check for when a stream is entered/left
     const chatbox = new ChatBox()
 
     await chatbox.sendChatMessage("Hello Dilla, I sent this from the app");

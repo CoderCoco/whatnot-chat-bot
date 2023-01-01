@@ -21,14 +21,14 @@ export class DomWatcher {
 
   private readonly mutationObserver: MutationObserver;
 
-  constructor(watchElement: HTMLElement) {
+  constructor(watchElement: HTMLElement, doesMonitorChildren = true) {
     if( !watchElement || watchElement.nodeType !== 1 ) throw new Error("BOOM"); 
 
     // define a new observer
     this.mutationObserver = new MutationObserver(this.observerCallback.bind(this));
 
     // have the observer observe for changes in children
-    this.mutationObserver.observe( watchElement, { childList:true, subtree:true })
+    this.mutationObserver.observe( watchElement, { childList: true, subtree: doesMonitorChildren })
   }
 
   private observerCallback(mutations: MutationRecord[]) {
