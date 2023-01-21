@@ -1,32 +1,27 @@
 import { logger } from "@app/logging";
-import { BrowserWindow, KeyboardInputEvent } from "electron";
+import { BrowserView, KeyboardInputEvent } from "electron";
 import { tick } from "../sleep";
 import { KeypressEvent } from "./keypress.event";
 
 // TODO: Document
 export class AppUrlWindow {
-  private static readonly READY_TO_SHOW = "ready-to-show";
   private static readonly KEYPRESS_EVENT_ORDER: ReadonlyArray<KeyboardInputEvent['type']> = ["keyDown", "char", "keyUp"];
 
-  public readonly window: BrowserWindow;
+  public readonly view: BrowserView;
 
   readonly #readyPromise: Promise<void>
 
-  constructor(url: string, options: Electron.BrowserWindowConstructorOptions | undefined = undefined) {
-    this.window = new BrowserWindow(options);
+  constructor(url: string, options: Electron.BrowserViewConstructorOptions | undefined = undefined) {
+    this.view = new BrowserView(options);
 
-    this.window.loadURL(url);
-
-    this.#readyPromise = new Promise((resolve) => {
+    this.#readyPromise = (async () => {
       logger.debug(`Waiting for window with URL ${url} to be ready`);
-      const eventFunction = () => {
-        logger.debug(`Window with URL ${url} is ready`);
-        this.window.off(AppUrlWindow.READY_TO_SHOW, eventFunction)
-        resolve()
-      }
 
-      this.window.on(AppUrlWindow.READY_TO_SHOW, eventFunction)
-    })
+      // @ts-ignore
+      await this.view.webContents.loadURL(url);
+
+      logger.debug(`Window with URL ${url} is ready`);
+    })();
   }
 
   /**
@@ -39,8 +34,8 @@ export class AppUrlWindow {
       // single character.
       if (type == "char" && keypress.keyCode.length > 1) continue;
 
-      this.window.focus();
-      this.window.webContents.sendInputEvent({
+      this.view.webContents.focus();
+      this.view.webContents.sendInputEvent({
         ...keypress,
         type: type
       });
@@ -63,7 +58,7 @@ export class AppUrlWindow {
   }
 
   /**
-   * Waits for when the {@link window} is ready to show and then returns.
+   * Waits for when the {@link view} is ready to show and then returns.
    */
   public async whenReady(): Promise<void> {
     await this.#readyPromise;

@@ -7,19 +7,19 @@ import {
 import {AppUrlWindow, IpcMainEventListener} from "@app/core";
 import {logger} from "@app/logging";
 import {mixitup} from "@app/mixitup-interface";
-import {BrowserWindow, ipcMain} from "electron";
+import {BrowserView, ipcMain} from "electron";
 import {SiteStatus} from "./site-status";
 import path = require("path");
 
 /**
  * A class that integrates entirely with the whatnot website.
  */
-class WhatnotWebsite {
+export class WhatnotWebsite {
   private static readonly BASE_URL = "https://www.whatnot.com";
 
   // These numbers were calculated by determining the shift in the whatnot css
-  private static readonly MIN_WIDTH = 1220;
-  private static readonly MIN_HEIGHT = 725;
+  public static readonly MIN_WIDTH = 1220;
+  public static readonly MIN_HEIGHT = 725;
   public readonly siteStatus = new SiteStatus();
 
   #sendKeysEventHandle: IpcMainEventListener | null = null;
@@ -33,8 +33,8 @@ class WhatnotWebsite {
     return this.#appUrlWindow;
   }
 
-  public get window(): BrowserWindow {
-    return this.appUrlWindow.window;
+  public get window(): BrowserView {
+    return this.appUrlWindow.view;
   }
 
   public async open(): Promise<void> {
@@ -43,12 +43,6 @@ class WhatnotWebsite {
     logger.info("Opening a new WhatNot browser window.")
 
     this.#appUrlWindow = new AppUrlWindow(WhatnotWebsite.BASE_URL, {
-      width: WhatnotWebsite.MIN_WIDTH,
-      height: WhatnotWebsite.MIN_HEIGHT,
-      minHeight: WhatnotWebsite.MIN_HEIGHT + 20,
-      minWidth: WhatnotWebsite.MIN_WIDTH,
-      minimizable: false,
-      title: "Dilla 8=====D",
       webPreferences: {
         devTools: true,
         sandbox: false,
@@ -62,8 +56,6 @@ class WhatnotWebsite {
 
     this.#sendKeysEventHandle = new IpcMainEventListener(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent.bind(this))
     this.#receiveMessageEventHandle = new IpcMainEventListener(WHATNOT_CHAT_RECEIVE_EVENT, this.handleReceivedMessageEvent.bind(this))
-
-    this.debugLog();
   }
 
   public get isOpen(): boolean {
@@ -76,7 +68,7 @@ class WhatnotWebsite {
 
   public close(): void {
     ipcMain.off(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent);
-    this.appUrlWindow.window.close();
+    this.appUrlWindow.view.webContents.close();
     this.#appUrlWindow = null;
     this.#sendKeysEventHandle?.destroy()
     this.#receiveMessageEventHandle?.destroy()
@@ -86,10 +78,10 @@ class WhatnotWebsite {
   }
 
   public toString(): string {
-    const window = this.#appUrlWindow?.window
+    const window = this.#appUrlWindow?.view
     const bounds = window?.getBounds();
 
-    return `BrowserWindow(currentUrl = ${window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
+    return `BrowserView(currentUrl = ${window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
   }
 
   private async handleKeySequenceEvent(_: Electron.IpcMainInvokeEvent, {keys}: WhatnotChatSendKeyEventArg) {
@@ -105,12 +97,4 @@ class WhatnotWebsite {
 
     await mixitup.commands.processChatMessage(chatMessage.message)
   }
-
-  private debugLog() {
-    if (logger.isVerboseEnabled()) {
-      logger.verbose(`${this.toString()}`)
-    }
-  }
 }
-
-export const whatnot = new WhatnotWebsite();

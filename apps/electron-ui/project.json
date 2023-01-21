@@ -15,8 +15,13 @@
         "outputPath": "dist/apps/electron-ui",
         "main": "apps/electron-ui/src/main.ts",
         "tsConfig": "apps/electron-ui/tsconfig.app.json",
+        "sourceMap": true,
         "assets": [
-          "apps/electron-ui/src/assets"
+          {
+            "glob": "**/*",
+            "input": "apps/electron-ui/src/assets",
+            "output": "/assets/"
+          }
         ]
       },
       "configurations": {
