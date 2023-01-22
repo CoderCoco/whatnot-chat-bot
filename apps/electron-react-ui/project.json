@@ -1,0 +1,84 @@
+{
+  "name": "electron-react-ui",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/electron-react-ui/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/electron-react-ui",
+        "index": "apps/electron-react-ui/src/index.html",
+        "baseHref": "./",
+        "main": "apps/electron-react-ui/src/main.tsx",
+        "polyfills": "apps/electron-react-ui/src/polyfills.ts",
+        "tsConfig": "apps/electron-react-ui/tsconfig.app.json",
+        "assets": [
+          "apps/electron-react-ui/src/favicon.ico",
+          "apps/electron-react-ui/src/assets"
+        ],
+        "styles": ["apps/electron-react-ui/src/styles.scss"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/electron-react-ui/src/environments/environment.ts",
+              "with": "apps/electron-react-ui/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "electron-react-ui:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "electron-react-ui:build:development"
+        },
+        "production": {
+          "buildTarget": "electron-react-ui:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/electron-react-ui/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/electron-react-ui/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

@@ -17,6 +17,7 @@
     "paths": {
       "@app/application-events": ["libs/application-events/src/index.ts"],
       "@app/core": ["libs/core/src/index.ts"],
+      "@app/electron-react-bridge": ["libs/electron-react-bridge/src/index.ts"],
       "@app/logging": ["libs/logging/src/index.ts"],
       "@app/mixitup-interface": ["libs/mixitup-interface/src/index.ts"],
       "@app/whatnot-interface": ["libs/whatnot-interface/src/index.ts"],

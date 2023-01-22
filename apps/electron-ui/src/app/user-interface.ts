@@ -4,6 +4,30 @@ import {WhatnotWebsite} from "@app/whatnot-interface";
 import {BrowserWindow} from "electron";
 
 export class UserInterface {
+  /**
+   * The minimum width of the window.
+   * @private
+   */
+  private static readonly MIN_WIDTH = WhatnotWebsite.MIN_WIDTH;
+
+  /**
+   * The height of the top controls of the page.
+   * @private
+   */
+  private static readonly CONTROL_HEIGHT = 75;
+
+  /**
+   * The height of the divider line.
+   * @private
+   */
+  private static readonly DIVIDER_HEIGHT = 5;
+
+  /**
+   * The minimum height of the window.
+   * @private
+   */
+  private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT;
+
 
   /**
    * Creates the {@link UserInterface} for the application and waits for it to
@@ -45,7 +69,7 @@ export class UserInterface {
 
   private static async createUiView(window: BrowserWindow): Promise<AppFileBrowserView> {
     return AppFileBrowserView.createView(
-      "assets/index.html",
+      "../electron-react-ui/index.html",
       window,
       {
         bounds: {
@@ -75,31 +99,6 @@ export class UserInterface {
         }
       );
   }
-
-  /**
-   * The minimum width of the window.
-   * @private
-   */
-  private static readonly MIN_WIDTH = WhatnotWebsite.MIN_WIDTH;
-
-  /**
-   * The height of the top controls of the page.
-   * @private
-   */
-  private static readonly CONTROL_HEIGHT = 50;
-
-  /**
-   * The height of the divider line.
-   * @private
-   */
-  private static readonly DIVIDER_HEIGHT = 5;
-
-  /**
-   * The minimum height of the window.
-   * @private
-   */
-  private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT;
-
 
   private constructor(
     private readonly window: BrowserWindow,

@@ -1,5 +1,3 @@
-import { logger } from "@app/logging";
-import path = require("path");
-import { IPCLoggerTransport } from "../logger/ipc-logger-transport";
+import { logger, IPCLoggerTransport } from "@app/logging";
 
 logger.add(new IPCLoggerTransport());

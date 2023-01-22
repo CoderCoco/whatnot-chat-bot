@@ -1,6 +1,5 @@
-import { logger } from "@app/logging";
+import {IPCLoggerTransport, logger} from "@app/logging";
 import { ipcMain } from "electron";
-import { IPCLoggerTransport } from "@app/whatnot-render-process";
 
 type LogProperty = {level: string, message: string}
 
