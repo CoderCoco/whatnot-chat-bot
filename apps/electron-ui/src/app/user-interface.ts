@@ -2,6 +2,7 @@ import {AppFileBrowserView} from "@app/core";
 import {logger} from "@app/logging";
 import {WhatnotWebsite} from "@app/whatnot-interface";
 import {BrowserWindow} from "electron";
+import * as path from 'path';
 
 export class UserInterface {
   /**
@@ -77,6 +78,11 @@ export class UserInterface {
           y: 0,
           height: UserInterface.CONTROL_HEIGHT,
           width: UserInterface.MIN_WIDTH
+        }
+      },
+      {
+        webPreferences: {
+          preload: path.join(__dirname, "../../libs/electron-react-bridge/src/main.js")
         }
       }
     );
