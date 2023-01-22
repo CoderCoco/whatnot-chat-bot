@@ -1,1 +1,1 @@
-export * from './lib/whatnot';
+export * from './lib/whatnot-website';

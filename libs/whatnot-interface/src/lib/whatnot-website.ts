@@ -4,7 +4,7 @@ import {
   WhatnotChatSendKeyEventArg,
   WhatnotWebsiteStatus
 } from "@app/application-events";
-import {AppUrlWindow, IpcMainEventListener} from "@app/core";
+import {AppUrlBrowserView, IpcMainEventListener} from "@app/core";
 import {logger} from "@app/logging";
 import {mixitup} from "@app/mixitup-interface";
 import {BrowserView, ipcMain} from "electron";
@@ -17,6 +17,18 @@ import path = require("path");
 export class WhatnotWebsite {
   private static readonly BASE_URL = "https://www.whatnot.com";
 
+  /**
+   * Creates a new {@link WhatnotWebsite} view.
+   *
+   * @returns The whatnot website instantiated object.
+   */
+  public static async createView(): Promise<WhatnotWebsite> {
+    const website = new WhatnotWebsite();
+    await website.open();
+
+    return website;
+  }
+
   // These numbers were calculated by determining the shift in the whatnot css
   public static readonly MIN_WIDTH = 1220;
   public static readonly MIN_HEIGHT = 725;
@@ -24,17 +36,19 @@ export class WhatnotWebsite {
 
   #sendKeysEventHandle: IpcMainEventListener | null = null;
   #receiveMessageEventHandle: IpcMainEventListener | null = null;
+  #appUrlWindow: AppUrlBrowserView | null = null
 
-  #appUrlWindow: AppUrlWindow | null = null
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private constructor() {}
 
-  public get appUrlWindow(): AppUrlWindow {
+  public get appUrlBrowserView(): AppUrlBrowserView {
     if (!this.#appUrlWindow) throw new Error("Whatnot window is not opened");
 
     return this.#appUrlWindow;
   }
 
-  public get window(): BrowserView {
-    return this.appUrlWindow.view;
+  public get view(): BrowserView {
+    return this.appUrlBrowserView.view;
   }
 
   public async open(): Promise<void> {
@@ -42,15 +56,13 @@ export class WhatnotWebsite {
 
     logger.info("Opening a new WhatNot browser window.")
 
-    this.#appUrlWindow = new AppUrlWindow(WhatnotWebsite.BASE_URL, {
+    this.#appUrlWindow = await AppUrlBrowserView.createView(WhatnotWebsite.BASE_URL, {
       webPreferences: {
         devTools: true,
         sandbox: false,
         preload: path.join(__dirname, "../../libs/whatnot-render-process/src/main.js")
       }
     });
-
-    await this.#appUrlWindow.whenReady()
 
     logger.info('Adding chatbox keypress event listener');
 
@@ -68,7 +80,7 @@ export class WhatnotWebsite {
 
   public close(): void {
     ipcMain.off(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent);
-    this.appUrlWindow.view.webContents.close();
+    this.appUrlBrowserView.view.webContents.close();
     this.#appUrlWindow = null;
     this.#sendKeysEventHandle?.destroy()
     this.#receiveMessageEventHandle?.destroy()
@@ -81,7 +93,7 @@ export class WhatnotWebsite {
     const window = this.#appUrlWindow?.view
     const bounds = window?.getBounds();
 
-    return `BrowserView(currentUrl = ${window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
+    return `WhatnotWebsite(currentUrl = ${window?.webContents?.getURL()}, width = ${bounds?.width}, height = ${bounds?.height})`
   }
 
   private async handleKeySequenceEvent(_: Electron.IpcMainInvokeEvent, {keys}: WhatnotChatSendKeyEventArg) {
@@ -89,7 +101,7 @@ export class WhatnotWebsite {
       logger.verbose(`Sending requested key sequence, ${JSON.stringify(keys)}`);
     }
 
-    await this.appUrlWindow.sendSequence(keys);
+    await this.appUrlBrowserView.sendSequence(keys);
   }
 
   private async handleReceivedMessageEvent(_: Electron.IpcMainInvokeEvent, chatMessage: WhatnotChatReceiveEventArg) {
