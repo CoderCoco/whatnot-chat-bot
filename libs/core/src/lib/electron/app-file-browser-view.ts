@@ -1,5 +1,6 @@
 import { logger } from "@app/logging";
-import { AppBrowserView } from "./app-browser-view";
+import {AddOptions, AppBrowserView} from "./app-browser-view";
+import {BrowserWindow} from "electron";
 
 /**
  * An application view that opens up a file path.
@@ -9,15 +10,23 @@ export class AppFileBrowserView extends AppBrowserView {
    * Creates a file view.
    * @param file The file to open on the application.
    * @param options Options to set on the window.
+   * @param window The window to add the view to.
+   * @param sizingOptions The sizing options to use.
    *
    * @returns A reference to the created object.
    */
-  public static async createView(file: string,  options: Electron.BrowserViewConstructorOptions | undefined = undefined): Promise<AppFileBrowserView> {
-    const urlView = new AppFileBrowserView(options);
+  public static async createView(
+    file: string,
+    window: BrowserWindow,
+    sizingOptions: AddOptions,
+    options: Electron.BrowserViewConstructorOptions | undefined = undefined
+  ): Promise<AppFileBrowserView> {
+    const fileView = new AppFileBrowserView(options);
 
-    await urlView.loadFile(file);
+    fileView.addToWindow(window, sizingOptions);
+    await fileView.loadFile(file);
 
-    return urlView;
+    return fileView;
   }
 
   private constructor(options: Electron.BrowserViewConstructorOptions | undefined = undefined) {

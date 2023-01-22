@@ -12,9 +12,18 @@ export class UserInterface {
    * @returns The UserInterface object once it is opened.
    */
   public static async createUi(): Promise<UserInterface> {
+    const window = new BrowserWindow({
+      width: UserInterface.MIN_WIDTH,
+      height: UserInterface.MIN_HEIGHT,
+      minHeight: UserInterface.MIN_HEIGHT + 20,
+      minWidth: UserInterface.MIN_WIDTH,
+      minimizable: false,
+      title: "Dilla 8=====D"
+    });
+
     const promises: [Promise<AppFileBrowserView>, Promise<AppFileBrowserView>, Promise<WhatnotWebsite>] = [
-      AppFileBrowserView.createView("assets/index.html"),
-      AppFileBrowserView.createView("assets/divider.html"),
+      UserInterface.createUiView(window),
+      UserInterface.createDividerView(window),
       WhatnotWebsite.createView()
     ]
 
@@ -25,14 +34,46 @@ export class UserInterface {
     logger.debug("Shit has loaded");
 
     const ui = new UserInterface(
+      window,
       uiView,
       dividerView,
       whatnotWebsite
     );
 
-    uiView.view.webContents.openDevTools();
-
     return ui;
+  }
+
+  private static async createUiView(window: BrowserWindow): Promise<AppFileBrowserView> {
+    return AppFileBrowserView.createView(
+      "assets/index.html",
+      window,
+      {
+        bounds: {
+          x: 0,
+          y: 0,
+          height: UserInterface.CONTROL_HEIGHT,
+          width: UserInterface.MIN_WIDTH
+        }
+      }
+    );
+  }
+
+  private static async createDividerView(window: BrowserWindow): Promise<AppFileBrowserView> {
+      return AppFileBrowserView.createView(
+        "assets/divider.html",
+        window,
+        {
+          bounds: {
+            x: 0,
+            y: UserInterface.CONTROL_HEIGHT,
+            height: UserInterface.DIVIDER_HEIGHT,
+            width: UserInterface.MIN_WIDTH + 10
+          },
+          resizeOptions: {
+            width: true
+          }
+        }
+      );
   }
 
   /**
@@ -59,50 +100,17 @@ export class UserInterface {
    */
   private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT;
 
-  private readonly window = new BrowserWindow({
-    width: UserInterface.MIN_WIDTH,
-    height: UserInterface.MIN_HEIGHT,
-    minHeight: UserInterface.MIN_HEIGHT + 20,
-    minWidth: UserInterface.MIN_WIDTH,
-    minimizable: false,
-    title: "Dilla 8=====D"
-  });
 
   private constructor(
+    private readonly window: BrowserWindow,
+
     private readonly uiView: AppFileBrowserView,
     private readonly dividerView: AppFileBrowserView,
     private readonly whatnotWebsite: WhatnotWebsite
   ) {
-    this.addUiView();
-    this.addDivider();
     this.addWhatnot();
 
     this.window.show();
-  }
-
-  private addUiView() {
-    this.uiView.addToWindow(this.window, {
-      bounds: {
-        x: 0,
-        y: 0,
-        height: UserInterface.CONTROL_HEIGHT,
-        width: UserInterface.MIN_WIDTH
-      }
-    });
-  }
-
-  private addDivider() {
-    this.dividerView.addToWindow(this.window, {
-      bounds: {
-        x: 0,
-        y: UserInterface.CONTROL_HEIGHT,
-        height: UserInterface.DIVIDER_HEIGHT,
-        width: UserInterface.MIN_WIDTH + 10
-      },
-      resizeOptions: {
-        width: true
-      }
-    });
   }
 
   private addWhatnot() {

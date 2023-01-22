@@ -3,11 +3,17 @@ import { KeypressEvent } from "./keypress.event";
 import { tick } from "../sleep";
 import {AutoResizeOptions, BrowserView, BrowserWindow, KeyboardInputEvent, Rectangle} from "electron";
 
+/**
+ * The options that are used to add a view to a window.
+ */
 export interface AddOptions {
   bounds?: Rectangle,
   resizeOptions?: AutoResizeOptions
 }
 
+/**
+ * An application browser view class.
+ */
 export class AppBrowserView {
   private static readonly KEYPRESS_EVENT_ORDER: ReadonlyArray<KeyboardInputEvent['type']> = ["keyDown", "char", "keyUp"];
 
@@ -35,8 +41,18 @@ export class AppBrowserView {
 
     appWindow.addBrowserView(this.view)
 
-    if (options.bounds) this.view.setBounds(options.bounds);
-    if (options.resizeOptions) this.view.setAutoResize(options.resizeOptions);
+    if (options.bounds) {
+      logger.silly(`Setting bounds ${JSON.stringify(options.bounds)}`)
+      this.view.setBounds(options.bounds);
+    }
+    if (options.resizeOptions) {
+      logger.silly(`Setting resizeOptions ${JSON.stringify(options.resizeOptions)}`);
+      this.view.setAutoResize(options.resizeOptions);
+    }
+
+    if (logger.isSillyEnabled()) {
+      logger.silly(`Added ${this.toString()}`);
+    }
   }
 
   /**
@@ -73,6 +89,8 @@ export class AppBrowserView {
   }
 
   public toString(): string {
-    return `AppBrowserView(url = ${this.view.webContents.getURL()})`
+    const bounds = this.view.getBounds();
+
+    return `AppBrowserView(url = ${this.view.webContents.getURL()}, x = ${bounds?.x}, y = ${bounds?.y}, width = ${bounds?.width}, height = ${bounds?.height}))`
   }
 }
