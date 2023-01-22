@@ -56,6 +56,8 @@ export class UserInterface {
 
     const [uiView, dividerView, whatnotWebsite] = await Promise.all(promises);
 
+    uiView.view.webContents.openDevTools();
+
     logger.debug("Shit has loaded");
 
     const ui = new UserInterface(
@@ -82,7 +84,8 @@ export class UserInterface {
       },
       {
         webPreferences: {
-          preload: path.join(__dirname, "../../libs/electron-react-bridge/src/main.js")
+          sandbox: false,
+          preload: path.join(__dirname, "../../libs/electron-react-bridge/src/index.js")
         }
       }
     );

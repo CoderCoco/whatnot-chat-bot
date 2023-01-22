@@ -1,13 +1,13 @@
-import {LoggerType} from "@app/logging";
 import {Button} from "primereact/button";
 import {InputText} from "primereact/inputtext";
 import {useState} from "react";
+import {logger} from "../logging";
 
 export default function GoToLiveForm() {
   const [value, setValue] = useState<string>();
 
   const goLiveClicked = () => {
-    ((window as any).logger as LoggerType).debug(`Go live button clicked with ${value}`);
+    logger.debug(`Go live button clicked with ${value}`);
   };
 
   return (

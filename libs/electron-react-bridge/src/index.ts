@@ -1,1 +1,1 @@
-export * from './lib/electron-react-bridge';
+require('./lib/electron-react-bridge')
