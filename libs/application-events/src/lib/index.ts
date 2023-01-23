@@ -1,3 +1,4 @@
+export * from './navigate-to-url.event';
 export * from './whatnot-chat-send.event';
 export * from './whatnot-chat-receive.event';
 export * from './whatnot-chat-send-keys.event';

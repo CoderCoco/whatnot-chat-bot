@@ -1,13 +1,22 @@
 import {Button} from "primereact/button";
 import {InputText} from "primereact/inputtext";
 import {useState} from "react";
-import {logger} from "../logging";
+import {events, logger} from "../main-world-functions";
 
 export default function GoToLiveForm() {
   const [value, setValue] = useState<string>();
 
-  const goLiveClicked = () => {
-    logger.debug(`Go live button clicked with ${value}`);
+  const goLiveClicked = async () => {
+    logger.silly("Entered the go live click method")
+
+    if (value == null) return;
+
+    const trimmedValue = value.trim();
+
+    if (trimmedValue == "") return;
+
+    logger.debug(`Go live button clicked with ${trimmedValue}`);
+    await events.goToLink(trimmedValue);
   };
 
   return (

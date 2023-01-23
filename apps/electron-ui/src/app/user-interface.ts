@@ -1,4 +1,5 @@
-import {AppFileBrowserView} from "@app/core";
+import {NAVIGATE_TO_URL_EVENT, NavigateToUrlEventArgs} from "@app/application-events";
+import {AppFileBrowserView, IpcMainEventListener} from "@app/core";
 import {logger} from "@app/logging";
 import {WhatnotWebsite} from "@app/whatnot-interface";
 import {BrowserWindow} from "electron";
@@ -29,7 +30,6 @@ export class UserInterface {
    */
   private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT;
 
-
   /**
    * Creates the {@link UserInterface} for the application and waits for it to
    * open.
@@ -55,8 +55,6 @@ export class UserInterface {
     logger.debug("Waiting for all the shit to load");
 
     const [uiView, dividerView, whatnotWebsite] = await Promise.all(promises);
-
-    uiView.view.webContents.openDevTools();
 
     logger.debug("Shit has loaded");
 
@@ -108,6 +106,7 @@ export class UserInterface {
         }
       );
   }
+  private readonly goToEventListener = new IpcMainEventListener(NAVIGATE_TO_URL_EVENT, this.handleGoToNavigation.bind(this));
 
   private constructor(
     private readonly window: BrowserWindow,
@@ -119,6 +118,12 @@ export class UserInterface {
     this.addWhatnot();
 
     this.window.show();
+  }
+
+  private async handleGoToNavigation(_: Electron.IpcMainInvokeEvent, arg: NavigateToUrlEventArgs): Promise<void> {
+    logger.debug(`Received goToNavigation link ${arg.url}`);
+
+    await this.whatnotWebsite.appUrlBrowserView.loadUrl(arg.url);
   }
 
   private addWhatnot() {

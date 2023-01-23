@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/electron-react-ui/src",
   "projectType": "application",
+  "implicitDependencies": ["electron-react-bridge"],
   "targets": {
     "build": {
       "executor": "@nrwl/webpack:webpack",

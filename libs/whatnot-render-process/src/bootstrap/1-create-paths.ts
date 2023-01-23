@@ -1,5 +1,7 @@
 const path = require("path");
 
+// TODO: Extract this to a common library
+
 const rootPath: string = path.join(__dirname, "../../../../..");
 const loadPath: string = path.join(rootPath, "tsconfig.base.json");
 
