@@ -22,4 +22,5 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
-    - run: npx nx run electron-ui:build
+    - name: Build
+      run: nx run-many --target build --configuration production --parallel 5
