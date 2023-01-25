@@ -25,4 +25,4 @@ jobs:
     - name: Build
       run: |
         npm install
-        npx nx run electron-ui:build
+        npx nx run bundle:build
