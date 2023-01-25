@@ -23,4 +23,4 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - name: Build
-      run: nx run-many --target build --configuration production --parallel 5
+      run: npx nx run-many --target build --configuration production --parallel 5
