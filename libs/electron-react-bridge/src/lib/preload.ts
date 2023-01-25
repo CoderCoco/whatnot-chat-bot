@@ -13,5 +13,3 @@ export function appEntry() {
 
   contextBridge.exposeInMainWorld('events', ipcEvents)
 }
-
-//https://www.whatnot.com/live/4b70bf1c-4298-4499-a365-0fcec77c5c0f
