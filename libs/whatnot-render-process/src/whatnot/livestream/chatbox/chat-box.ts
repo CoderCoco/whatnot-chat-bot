@@ -5,18 +5,40 @@ import {
 } from "@app/application-events";
 import { logger } from "@app/logging";
 import { ipcRenderer } from "electron";
-import {OnDestroy, tick} from "@app/core";
+import {OnDestroy, sleep, tick} from "@app/core";
 import {IpcRenderEventListener} from "@app/core";
 import { convertString } from "../convert-string";
 import { ChatBoxWatcher } from "./chat-box-watcher";
 
 export class ChatBox implements OnDestroy {
-  readonly #sendMessageElement: HTMLInputElement;
-  readonly #chatboxWatcher: ChatBoxWatcher;
-  readonly #whatnotSendChatEvent = new IpcRenderEventListener(
-    WHATNOT_CHAT_SEND_EVENT,
-    this.chatMessageListener.bind(this)
-  )
+  public static async create(): Promise<ChatBox> {
+    logger.debug("Creating the ChatBox")
+
+    const chatboxElement = await ChatBox.waitForInputToAppear()
+    const chatboxWatcher = await ChatBoxWatcher.create(
+      ChatBox.#getChatboxElement(chatboxElement)
+    )
+
+    return new ChatBox(chatboxElement, chatboxWatcher)
+  }
+
+  private static async waitForInputToAppear(): Promise<HTMLInputElement> {
+    const timeout = 5000;
+    const timeBetweenChecks = 10;
+    const loopCount = timeout / timeBetweenChecks;
+
+    for (let i = 0; i < loopCount; i++) {
+      logger.silly("Looking for the chatbox div");
+      const element = document.querySelector(".chatInput") as HTMLInputElement | null;
+
+      if (element != null) return element;
+
+      await sleep(timeBetweenChecks);
+    }
+
+    console.error("Unable to locate the chatbox");
+    throw new Error("Timeout waiting for the input to appear.")
+  }
 
   static #getChatboxElement(inputElement: HTMLInputElement): HTMLDivElement {
     const value = inputElement.parentElement?.parentElement?.childNodes[0];
@@ -26,18 +48,16 @@ export class ChatBox implements OnDestroy {
     return value as HTMLDivElement;
   }
 
-  constructor() {
+  readonly #whatnotSendChatEvent = new IpcRenderEventListener(
+    WHATNOT_CHAT_SEND_EVENT,
+    this.chatMessageListener.bind(this)
+  )
+
+  private constructor(
+    private readonly sendMessageElement: HTMLInputElement,
+    private readonly chatboxWatcher: ChatBoxWatcher
+  ) {
     logger.debug("Constructing a new ChatBox");
-    const input = document.querySelector(".chatInput");
-
-    if (input == null) {
-      throw new Error("Unable to find chatbox message div")
-    }
-
-    this.#sendMessageElement = input as HTMLInputElement
-    this.#chatboxWatcher = new ChatBoxWatcher(
-      ChatBox.#getChatboxElement(this.#sendMessageElement)
-    );
   }
 
   /**
@@ -46,7 +66,7 @@ export class ChatBox implements OnDestroy {
   public destroy() {
     logger.debug("Destroying the chatbox");
     this.#whatnotSendChatEvent.destroy();
-    this.#chatboxWatcher.destroy();
+    this.chatboxWatcher.destroy();
   }
 
   private async chatMessageListener(_: Electron.IpcRendererEvent, {message}: WhatnotChatSendEventArg) {
@@ -55,7 +75,7 @@ export class ChatBox implements OnDestroy {
 
   public async sendChatMessage(message: string) {
     logger.debug("Focusing the chat element");
-    this.#sendMessageElement.focus();
+    this.sendMessageElement.focus();
 
     logger.debug("Waiting for focus");
     await tick();

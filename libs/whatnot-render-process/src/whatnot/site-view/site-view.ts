@@ -35,14 +35,7 @@ export class SiteView {
 
   private async handleNewLiveStreamView() {
     this.destroyOldView();
-
-    logger.debug("Waiting for dom to be created")
-    await sleep(500);
-
-    const newSite = new LiveStream();
-    await newSite.chatbox.sendChatMessage("The bot has been connected!");
-
-    this.#currentSiteView = newSite;
+    this.#currentSiteView = await LiveStream.create();
 
     await ipcRenderer.invoke(WHATNOT_WEBSITE_STATUS_UPDATE_EVENT, {status: WhatnotWebsiteStatus.LIVE_STREAM})
   }
