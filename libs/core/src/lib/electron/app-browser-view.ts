@@ -81,7 +81,9 @@ export class AppBrowserView {
    */
   public async sendSequence(sequence: KeypressEvent[]){
     for (const entry of sequence){
-      logger.silly("Sending Key", entry);
+      if (logger.isSillyEnabled()) {
+        logger.silly(`Sending Key ${JSON.stringify(entry)}`);
+      }
 
       await this.sendKey(entry);
       await tick();

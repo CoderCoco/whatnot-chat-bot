@@ -1,15 +1,17 @@
-import {IPCLoggerTransport, logger} from "@app/logging";
-import chalk from "chalk";
+import {defaultConsoleTransport, IPCLoggerTransport, logger} from "@app/logging";
 import { ipcMain } from "electron";
 import * as path from "path";
 import * as process from "process";
 import * as winston from "winston";
 import {format} from 'logform';
+import * as chalk from "chalk";
 
 type LogProperty = {level: string, message: string}
 
-export function addLoggingHandler() {
+export async function addLoggingHandler() {
   const loggingHome = process.env['APPDATA'];
+
+  logger.remove(defaultConsoleTransport);
 
   logger.add(
     new winston.transports.File({
@@ -19,7 +21,18 @@ export function addLoggingHandler() {
         format.timestamp(),
         format.align(),
         format.metadata(),
-        format.printf(info => generatePrintf(info as any))
+        format.printf(info => generatePrintfNonColor(info as any))
+      )
+    })
+  );
+
+  logger.add(
+    new winston.transports.Console({
+      format: format.combine(
+        format.timestamp(),
+        format.align(),
+        format.metadata(),
+        format.printf(info => generatePrintfColor(info as any))
       )
     })
   );
@@ -37,9 +50,26 @@ interface LoggingInfo {
   level: string;
   message: string;
 }
-function generatePrintf(info: LoggingInfo) {
-  let message = `${info.metadata.timestamp} ${info.level}`;
-  message += ' [' + (info['metadata'].service || 'main').padEnd(27) + ']';
+
+function getThread(info: LoggingInfo): string {
+  return ' [' + (info['metadata'].service || 'main').padEnd(27) + ']'
+}
+
+function getLogLevel(info: LoggingInfo): string {
+  return info.level.padEnd(7);
+}
+
+function generatePrintfNonColor(info: LoggingInfo) {
+  let message = `${info.metadata.timestamp} ${getLogLevel(info)}`;
+  message += getThread(info);
+  return `${message} ${info.message}`;
+}
+
+function generatePrintfColor(info: LoggingInfo) {
+  const colorizer = winston.format.colorize()
+
+  let message = `${chalk.gray(info.metadata.timestamp)} ${colorizer.colorize(info.level, getLogLevel(info))}`;
+  message += chalk.cyan(getThread(info));
 
   return `${message} ${info.message}`;
 }

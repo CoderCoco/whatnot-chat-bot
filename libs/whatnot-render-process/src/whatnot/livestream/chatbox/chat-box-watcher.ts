@@ -7,7 +7,7 @@ import { ChatBoxMessage } from "./chat-box-message";
 import { ipcRenderer } from "electron";
 
 export class ChatBoxWatcher implements OnDestroy {
-  private static readonly DEBOUNCE_TIME = 500;
+  private static readonly DEBOUNCE_TIME = 2500;
 
   public static async create(chatboxDiv: HTMLDivElement): Promise<ChatBoxWatcher> {
     logger.debug(`Waiting for ${ChatBoxWatcher.DEBOUNCE_TIME}ms before initializing the ChatBoxWatcher`)
