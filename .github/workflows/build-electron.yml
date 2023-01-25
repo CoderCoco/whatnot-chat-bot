@@ -21,8 +21,5 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-
-    - name: Build
-      run: |
-        npm install
-        npx nx run bundle:build
+    - run: npm install
+    - run: npm nx run electron-ui:build
