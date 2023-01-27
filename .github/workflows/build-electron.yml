@@ -8,11 +8,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [16.x]
 
     steps:
     - uses: actions/checkout@v3
@@ -21,8 +21,17 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
-
+    - run: npm ci
     - name: Build
-      run: |
-        npm install
-        npx nx run electron-ui:build
+      run: npx nx run-many --target build --configuration production --parallel 5
+
+    - name: Zip Release
+      uses: TheDoctor0/zip-release@0.7.0
+      with:
+        filename: out/whatnot-chatbot-win32-x64.zip
+        path: out/whatnot-chatbot-win32-x64
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: whatnot-chatbot-win32-x64
+        path: out/whatnot-chatbot-win32-x64.zip

@@ -3,10 +3,11 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "./",
   "projectType": "application",
-  "implicitDependencies": ["whatnot-render-process"],
+  "implicitDependencies": ["whatnot-render-process", "electron-react-ui", "electron-react-bridge"],
   "targets": {
     "build": {
       "dependsOn": ["^build"],
+      "defaultConfiguration": "production",
       "executor": "@nrwl/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "options": {

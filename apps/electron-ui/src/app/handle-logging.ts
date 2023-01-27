@@ -1,11 +1,75 @@
-import { logger } from "@app/logging";
+import {defaultConsoleTransport, IPCLoggerTransport, logger} from "@app/logging";
 import { ipcMain } from "electron";
-import { IPCLoggerTransport } from "@app/whatnot-render-process";
+import * as path from "path";
+import * as process from "process";
+import * as winston from "winston";
+import {format} from 'logform';
+import * as chalk from "chalk";
 
 type LogProperty = {level: string, message: string}
 
-export function addLoggingHandler() {
+export async function addLoggingHandler() {
+  const loggingHome = process.env['APPDATA'];
+
+  logger.remove(defaultConsoleTransport);
+
+  logger.add(
+    new winston.transports.File({
+      dirname: path.join(loggingHome, "WhatnotChatbot/logging"),
+      filename: 'application.log',
+      format: format.combine(
+        format.timestamp(),
+        format.align(),
+        format.metadata(),
+        format.printf(info => generatePrintfNonColor(info as any))
+      )
+    })
+  );
+
+  logger.add(
+    new winston.transports.Console({
+      format: format.combine(
+        format.timestamp(),
+        format.align(),
+        format.metadata(),
+        format.printf(info => generatePrintfColor(info as any))
+      )
+    })
+  );
+
   ipcMain.handle(IPCLoggerTransport.LOG_EVENT, (_, {level, message}: LogProperty) => {
-    logger.log(level, message, {service: "WhatNot Render Process"});
+    logger.log(level, message, {service: "Browser View Render Process"});
   });
+}
+
+interface LoggingInfo {
+  metadata: {
+    timestamp: string;
+    service?: string;
+  }
+  level: string;
+  message: string;
+}
+
+function getThread(info: LoggingInfo): string {
+  return ' [' + (info['metadata'].service || 'main').padEnd(27) + ']'
+}
+
+function getLogLevel(info: LoggingInfo): string {
+  return info.level.padEnd(7);
+}
+
+function generatePrintfNonColor(info: LoggingInfo) {
+  let message = `${info.metadata.timestamp} ${getLogLevel(info)}`;
+  message += getThread(info);
+  return `${message} ${info.message}`;
+}
+
+function generatePrintfColor(info: LoggingInfo) {
+  const colorizer = winston.format.colorize()
+
+  let message = `${chalk.gray(info.metadata.timestamp)} ${colorizer.colorize(info.level, getLogLevel(info))}`;
+  message += chalk.cyan(getThread(info));
+
+  return `${message} ${info.message}`;
 }
