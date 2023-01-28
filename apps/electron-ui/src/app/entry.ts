@@ -8,7 +8,7 @@ export async function main() {
 
   Menu.setApplicationMenu(null);
 
-  addLoggingHandler();
+  await addLoggingHandler();
 
   await mixitup.commands.ready
 

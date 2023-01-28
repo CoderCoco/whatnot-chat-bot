@@ -23,7 +23,8 @@
             "input": "apps/electron-ui/src/assets",
             "output": "/assets/"
           }
-        ]
+        ],
+        "webpackConfig": "apps/electron-ui/webpack.config.js"
       },
       "configurations": {
         "production": {

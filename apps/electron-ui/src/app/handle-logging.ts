@@ -1,3 +1,4 @@
+import {cliArgs} from "@app/cli";
 import {defaultConsoleTransport, IPCLoggerTransport, logger} from "@app/logging";
 import { ipcMain } from "electron";
 import * as path from "path";
@@ -15,7 +16,7 @@ export async function addLoggingHandler() {
 
   logger.add(
     new winston.transports.File({
-      dirname: path.join(loggingHome, "WhatnotChatbot/logging"),
+      dirname: cliArgs.logDirectory,
       filename: 'application.log',
       format: format.combine(
         format.timestamp(),

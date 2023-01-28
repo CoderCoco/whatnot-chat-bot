@@ -3,7 +3,8 @@
   "files": [],
   "include": [],
   "compilerOptions": {
-    "module": "commonjs",
+    "target": "es2017",
+    "module": "es2022",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,

@@ -9,7 +9,7 @@ import {logger} from "@app/logging";
 import {mixitup} from "@app/mixitup-interface";
 import {BrowserView, ipcMain} from "electron";
 import {SiteStatus} from "./site-status";
-import path = require("path");
+import * as path from 'path';
 
 /**
  * A class that integrates entirely with the whatnot website.
