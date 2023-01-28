@@ -1,7 +1,8 @@
+import {logger} from "@app/logging";
 import { main } from "./app/entry";
 
 main()
-  .catch(e => console.error(e));
+  .catch(e => logger.error(e));
 
   // Also update build to use the nx processes
 
