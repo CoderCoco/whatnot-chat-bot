@@ -63,6 +63,8 @@ export class WhatnotWebsite {
       }
     });
 
+    this.appUrlBrowserView.view.webContents.openDevTools();
+
     logger.info('Adding chatbox keypress event listener');
 
     this.#sendKeysEventHandle = new IpcMainEventListener(WHATNOT_CHAT_SEND_KEYS_EVENT, this.handleKeySequenceEvent.bind(this))

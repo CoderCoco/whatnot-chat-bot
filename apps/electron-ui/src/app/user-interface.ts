@@ -42,10 +42,9 @@ export class UserInterface {
       minHeight: UserInterface.MIN_HEIGHT + 20,
       minWidth: UserInterface.MIN_WIDTH,
       minimizable: false,
+      resizable: false,
       title: "Dilla 8=====D"
     });
-
-    window.setResizable(false);
 
     const promises: [Promise<AppFileBrowserView>, Promise<AppFileBrowserView>, Promise<WhatnotWebsite>] = [
       UserInterface.createUiView(window),
@@ -66,6 +65,7 @@ export class UserInterface {
       whatnotWebsite
     );
 
+    logger.info("Loading has completed. Enable resize capabilities");
     window.setResizable(true);
 
     return ui;
