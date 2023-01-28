@@ -5,8 +5,8 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "target": "es2017",
-    "module": "es2022"
+    "target": "es2015",
+    "module": "commonjs"
   },
   "files": [],
   "include": [],

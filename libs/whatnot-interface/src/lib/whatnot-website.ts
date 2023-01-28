@@ -4,12 +4,11 @@ import {
   WhatnotChatSendKeyEventArg,
   WhatnotWebsiteStatus
 } from "@app/application-events";
-import {AppUrlBrowserView, IpcMainEventListener} from "@app/core";
+import {AppUrlBrowserView, getFileRelativeToDist, IpcMainEventListener} from "@app/core";
 import {logger} from "@app/logging";
 import {mixitup} from "@app/mixitup-interface";
 import {BrowserView, ipcMain} from "electron";
 import {SiteStatus} from "./site-status";
-import * as path from 'path';
 
 /**
  * A class that integrates entirely with the whatnot website.
@@ -60,9 +59,11 @@ export class WhatnotWebsite {
       webPreferences: {
         devTools: true,
         sandbox: false,
-        preload: path.join(__dirname, "../../libs/whatnot-render-process/src/main.js")
+        preload: getFileRelativeToDist('libs/whatnot-render-process/src/main.js')
       }
     });
+
+    this.appUrlBrowserView.view.webContents.openDevTools();
 
     logger.info('Adding chatbox keypress event listener');
 

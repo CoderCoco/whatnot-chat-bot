@@ -2,7 +2,10 @@ import {logger} from "@app/logging";
 import { main } from "./app/entry";
 
 main()
-  .catch(e => logger.error(e));
+  .catch(e => {
+    logger.error("Received application startup error!");
+    logger.error(e);
+  });
 
   // Also update build to use the nx processes
 

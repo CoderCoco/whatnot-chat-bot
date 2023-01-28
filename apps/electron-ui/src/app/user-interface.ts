@@ -1,9 +1,8 @@
 import {NAVIGATE_TO_URL_EVENT, NavigateToUrlEventArgs} from "@app/application-events";
-import {AppFileBrowserView, IpcMainEventListener} from "@app/core";
+import {AppFileBrowserView, IpcMainEventListener, getFileRelativeToDist} from "@app/core";
 import {logger} from "@app/logging";
 import {WhatnotWebsite} from "@app/whatnot-interface";
 import {BrowserWindow} from "electron";
-import * as path from 'path';
 
 export class UserInterface {
   /**
@@ -70,7 +69,7 @@ export class UserInterface {
 
   private static async createUiView(window: BrowserWindow): Promise<AppFileBrowserView> {
     return AppFileBrowserView.createView(
-      "../electron-react-ui/index.html",
+      getFileRelativeToDist('apps/electron-react-ui/index.html'),
       window,
       {
         bounds: {
@@ -83,7 +82,7 @@ export class UserInterface {
       {
         webPreferences: {
           sandbox: false,
-          preload: path.join(__dirname, "../../libs/electron-react-bridge/src/index.js")
+          preload: getFileRelativeToDist('libs/electron-react-bridge/src/index.js')
         }
       }
     );
@@ -91,7 +90,7 @@ export class UserInterface {
 
   private static async createDividerView(window: BrowserWindow): Promise<AppFileBrowserView> {
       return AppFileBrowserView.createView(
-        "assets/divider.html",
+        getFileRelativeToDist('apps/electron-ui/assets/divider.html'),
         window,
         {
           bounds: {

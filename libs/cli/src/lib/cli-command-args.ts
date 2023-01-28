@@ -4,13 +4,13 @@ import {getLoggingOptions, LoggingOptionsArgv, LogLevel} from "./logging";
 type FullArguments = LoggingOptionsArgv;
 
 export class CliCommandArgs {
-  public static async createCliCommand(): Promise<CliCommandArgs> {
-    const argv: FullArguments = await yargs(process.argv.slice(2))
+  public static createCliCommand(): CliCommandArgs {
+    const argv: FullArguments = yargs(process.argv.slice(2))
       .option(getLoggingOptions())
       .help()
       .argv;
 
-    return new CliCommandArgs(argv);
+    return new CliCommandArgs(argv as Awaited<FullArguments>);
   }
 
   public readonly logDirectory: string;
