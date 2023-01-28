@@ -49,11 +49,11 @@ export function getLoggingOptions(): LoggingOptions {
     'clear-old-logs': {
       alias: 'c',
       demandOption: true,
-      default: true,
+      default: false,
       description: 'Clear the old logs before writing any new ones',
       type: 'boolean'
     }
   }
 }
 
-export type LoggingOptionsArgv = Argv<Omit<{}, keyof LoggingOptions> & InferredOptionTypes<LoggingOptions>>["argv"]
+export type LoggingOptionsArgv = Argv<Omit<object, keyof LoggingOptions> & InferredOptionTypes<LoggingOptions>>["argv"]

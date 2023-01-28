@@ -1,18 +1,19 @@
 import {cliArgs} from "@app/cli";
 import {defaultConsoleTransport, IPCLoggerTransport, logger} from "@app/logging";
 import { ipcMain } from "electron";
-import * as path from "path";
-import * as process from "process";
 import * as winston from "winston";
 import {format} from 'logform';
 import * as chalk from "chalk";
+import * as fs from 'fs';
 
 type LogProperty = {level: string, message: string}
 
 export async function addLoggingHandler() {
-  const loggingHome = process.env['APPDATA'];
-
   logger.remove(defaultConsoleTransport);
+
+  if (cliArgs.doesClearOldLogs) {
+    await fs.promises.rm(cliArgs.logDirectory, { force: true, recursive: true});
+  }
 
   logger.add(
     new winston.transports.File({
