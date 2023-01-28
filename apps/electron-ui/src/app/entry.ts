@@ -15,8 +15,6 @@ export async function main() {
 
   Menu.setApplicationMenu(null);
 
-  console.log('process.env.FORCE_COLOR=', process.env['FORCE_COLOR'])
-
   await addLoggingHandler();
   logCliArguments();
 

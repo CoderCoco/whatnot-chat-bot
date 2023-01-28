@@ -1,6 +1,6 @@
 @ECHO OFF
 
-SET FORCE_COLOR = 1
+SET FORCE_COLOR=1
 
 echo "Executing bundle build"
 cmd.exe /C npx.cmd nx run bundle:build:production

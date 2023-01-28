@@ -42,6 +42,8 @@ export async function addLoggingHandler() {
   ipcMain.handle(IPCLoggerTransport.LOG_EVENT, (_, {level, message}: LogProperty) => {
     logger.log(level, message, {service: "Browser View Render Process"});
   });
+
+  logger.info(chalk.green('Application logging has been configured'));
 }
 
 interface LoggingInfo {
