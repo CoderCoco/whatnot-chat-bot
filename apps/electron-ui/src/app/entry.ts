@@ -1,3 +1,4 @@
+import {logCliArguments} from "@app/cli";
 import {mixitup} from "@app/mixitup-interface";
 import { app, Menu } from "electron";
 import { addLoggingHandler } from "./handle-logging";
@@ -9,6 +10,7 @@ export async function main() {
   Menu.setApplicationMenu(null);
 
   await addLoggingHandler();
+  logCliArguments();
 
   await mixitup.commands.ready
 
