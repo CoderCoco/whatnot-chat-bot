@@ -6,7 +6,6 @@ import { addLoggingHandler } from "./handle-logging";
 import {UserInterface} from "./user-interface";
 
 export async function main() {
-
   await app.whenReady();
 
   if (require('electron-squirrel-startup')) {

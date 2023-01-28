@@ -45,6 +45,8 @@ export class UserInterface {
       title: "Dilla 8=====D"
     });
 
+    window.setResizable(false);
+
     const promises: [Promise<AppFileBrowserView>, Promise<AppFileBrowserView>, Promise<WhatnotWebsite>] = [
       UserInterface.createUiView(window),
       UserInterface.createDividerView(window),
@@ -63,6 +65,8 @@ export class UserInterface {
       dividerView,
       whatnotWebsite
     );
+
+    window.setResizable(true);
 
     return ui;
   }
