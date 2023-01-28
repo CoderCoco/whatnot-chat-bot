@@ -27,7 +27,7 @@ export class UserInterface {
    * The minimum height of the window.
    * @private
    */
-  private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT;
+  private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT + 20;
 
   /**
    * Creates the {@link UserInterface} for the application and waits for it to
@@ -39,7 +39,7 @@ export class UserInterface {
     const window = new BrowserWindow({
       width: UserInterface.MIN_WIDTH,
       height: UserInterface.MIN_HEIGHT,
-      minHeight: UserInterface.MIN_HEIGHT + 20,
+      minHeight: UserInterface.MIN_HEIGHT,
       minWidth: UserInterface.MIN_WIDTH,
       minimizable: false,
       resizable: false,
@@ -67,6 +67,7 @@ export class UserInterface {
 
     logger.info("Loading has completed. Enable resize capabilities");
     window.setResizable(true);
+    window.setMinimumSize(UserInterface.MIN_WIDTH, UserInterface.MIN_HEIGHT);
 
     return ui;
   }
