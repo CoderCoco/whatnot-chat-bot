@@ -1,9 +1,8 @@
 import {NAVIGATE_TO_URL_EVENT, NavigateToUrlEventArgs} from "@app/application-events";
-import {AppFileBrowserView, IpcMainEventListener} from "@app/core";
+import {AppFileBrowserView, IpcMainEventListener, getFileRelativeToDist} from "@app/core";
 import {logger} from "@app/logging";
 import {WhatnotWebsite} from "@app/whatnot-interface";
 import {BrowserWindow} from "electron";
-import * as path from 'path';
 
 export class UserInterface {
   /**
@@ -28,7 +27,7 @@ export class UserInterface {
    * The minimum height of the window.
    * @private
    */
-  private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT;
+  private static readonly MIN_HEIGHT = UserInterface.CONTROL_HEIGHT + WhatnotWebsite.MIN_HEIGHT + UserInterface.DIVIDER_HEIGHT + 20;
 
   /**
    * Creates the {@link UserInterface} for the application and waits for it to
@@ -40,9 +39,10 @@ export class UserInterface {
     const window = new BrowserWindow({
       width: UserInterface.MIN_WIDTH,
       height: UserInterface.MIN_HEIGHT,
-      minHeight: UserInterface.MIN_HEIGHT + 20,
+      minHeight: UserInterface.MIN_HEIGHT,
       minWidth: UserInterface.MIN_WIDTH,
       minimizable: false,
+      resizable: false,
       title: "Dilla 8=====D"
     });
 
@@ -65,12 +65,16 @@ export class UserInterface {
       whatnotWebsite
     );
 
+    logger.info("Loading has completed. Enable resize capabilities");
+    window.setResizable(true);
+    window.setMinimumSize(UserInterface.MIN_WIDTH, UserInterface.MIN_HEIGHT);
+
     return ui;
   }
 
   private static async createUiView(window: BrowserWindow): Promise<AppFileBrowserView> {
     return AppFileBrowserView.createView(
-      "../electron-react-ui/index.html",
+      getFileRelativeToDist('apps/electron-react-ui/index.html'),
       window,
       {
         bounds: {
@@ -83,7 +87,7 @@ export class UserInterface {
       {
         webPreferences: {
           sandbox: false,
-          preload: path.join(__dirname, "../../libs/electron-react-bridge/src/index.js")
+          preload: getFileRelativeToDist('libs/electron-react-bridge/src/index.js')
         }
       }
     );
@@ -91,7 +95,7 @@ export class UserInterface {
 
   private static async createDividerView(window: BrowserWindow): Promise<AppFileBrowserView> {
       return AppFileBrowserView.createView(
-        "assets/divider.html",
+        getFileRelativeToDist('apps/electron-ui/assets/divider.html'),
         window,
         {
           bounds: {

@@ -38,6 +38,7 @@ export class Commands {
         }
       }
 
+      logger.error("Unable to load commands from Mix It Up");
       logger.error(e);
 
       throw e;

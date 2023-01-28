@@ -1,21 +1,23 @@
+import {cliArgs} from "@app/cli";
 import {defaultConsoleTransport, IPCLoggerTransport, logger} from "@app/logging";
 import { ipcMain } from "electron";
-import * as path from "path";
-import * as process from "process";
 import * as winston from "winston";
 import {format} from 'logform';
 import * as chalk from "chalk";
+import * as fs from 'fs';
 
 type LogProperty = {level: string, message: string}
 
 export async function addLoggingHandler() {
-  const loggingHome = process.env['APPDATA'];
-
   logger.remove(defaultConsoleTransport);
+
+  if (cliArgs.doesClearOldLogs) {
+    await fs.promises.rm(cliArgs.logDirectory, { force: true, recursive: true});
+  }
 
   logger.add(
     new winston.transports.File({
-      dirname: path.join(loggingHome, "WhatnotChatbot/logging"),
+      dirname: cliArgs.logDirectory,
       filename: 'application.log',
       format: format.combine(
         format.timestamp(),
@@ -40,6 +42,8 @@ export async function addLoggingHandler() {
   ipcMain.handle(IPCLoggerTransport.LOG_EVENT, (_, {level, message}: LogProperty) => {
     logger.log(level, message, {service: "Browser View Render Process"});
   });
+
+  logger.info(chalk.green('Application logging has been configured'));
 }
 
 interface LoggingInfo {

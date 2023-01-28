@@ -27,11 +27,19 @@ export class ChatBox implements OnDestroy {
     const timeBetweenChecks = 10;
     const loopCount = timeout / timeBetweenChecks;
 
-    for (let i = 0; i < loopCount; i++) {
-      logger.silly("Looking for the chatbox div");
-      const element = document.querySelector(".chatInput") as HTMLInputElement | null;
+    const chatboxDivSelector = '.chatInput';
 
-      if (element != null) return element;
+    for (let i = 0; i < loopCount; i++) {
+      logger.silly(`Looking for the chatbox div: ${chatboxDivSelector}`);
+      const element = document.querySelector(chatboxDivSelector) as HTMLInputElement | null;
+
+      if (element == null) {
+        logger.silly("Chatbox div doesn't exist yet");
+      } else if (element.disabled) {
+        logger.silly("Chatbox is still disabled");
+      } else {
+        return element;
+      }
 
       await sleep(timeBetweenChecks);
     }
