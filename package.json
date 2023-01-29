@@ -1,6 +1,6 @@
 {
   "name": "whatnot-chatbot",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "license": "MIT",
   "author": "CoderCoco",
   "description": "A WhatNot chatbot",
@@ -37,6 +37,7 @@
     "@electron-forge/maker-rpm": "^6.0.4",
     "@electron-forge/maker-squirrel": "^6.0.4",
     "@electron-forge/maker-zip": "^6.0.4",
+    "@electron-forge/publisher-github": "^6.0.4",
     "@nrwl/cypress": "15.6.3",
     "@nrwl/eslint-plugin-nx": "15.6.3",
     "@nrwl/jest": "15.6.3",
