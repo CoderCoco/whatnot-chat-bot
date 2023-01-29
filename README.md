@@ -1,6 +1,6 @@
 # App
 
-[![Build](https://github.com/CoderCoco/whatnot-chat-bot/actions/workflows/build.yml/badge.svg)](https://github.com/CoderCoco/whatnot-chat-bot/actions/workflows/build.yml)
+![Build](https://github.com/CoderCoco/whatnot-chat-bot/actions/workflows/build.yml/badge.svg)](https://github.com/CoderCoco/whatnot-chat-bot/actions/workflows/build.yml)
 
 <a href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
