@@ -29,7 +29,10 @@ jobs:
         uses: actions/setup-node@v3.6.0
         with:
           node-version: 16.x
+<<<<<<< HEAD
           cache: npm
+=======
+>>>>>>> 81b5120 (Update build.yml)
 
       - name: Install
         run: npm ci
