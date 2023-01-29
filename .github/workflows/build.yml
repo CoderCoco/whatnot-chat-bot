@@ -29,6 +29,7 @@ jobs:
         uses: actions/setup-node@v3.6.0
         with:
           node-version: 16.x
+          cache: npm
 
       - name: Install
         run: npm ci
@@ -67,6 +68,7 @@ jobs:
       uses: actions/setup-node@v3.6.0
       with:
         node-version: 16.x
+        cache: npm
 
     - name: Install
       run: npm ci
